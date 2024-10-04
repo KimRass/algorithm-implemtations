@@ -1,7 +1,6 @@
 # References:
     # https://docs.opencv.org/4.x/d7/d4d/tutorial_py_thresholding.html
 
-import cv2
 import numpy as np
 
 
@@ -52,17 +51,22 @@ def ada_thresh_mean(img, max_val, block_size, const, pad=False):
 
 
 if __name__ == "__main__":
-    img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
-    # img = img[: 10, : 7, ...]
-    const = 2
-    max_val = 255
-    block_size = 5
-    out1= ada_thresh_mean(
-        img, max_val=max_val, block_size=block_size, const=const,
-    )
-    show_image(out1)
+    import cv2
 
-    out2 = cv2.adaptiveThreshold(
+    img_path = "./resources/j.webp"
+    img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+
+    thresh = 120
+    max_val = 255
+    _, bin_out1 = cv2.threshold(
+        img, thresh=thresh, maxval=max_val, type=cv2.THRESH_BINARY,
+    )
+    bin_out2 = bin_thresh(img, thresh=thresh, max_val=max_val)
+    print(np.array_equal(bin_out1, bin_out2)) # True
+
+    const = 30
+    block_size = 7
+    ada_out1 = cv2.adaptiveThreshold(
         src=img,
         maxValue=max_val,
         adaptiveMethod=cv2.ADAPTIVE_THRESH_MEAN_C,
@@ -70,6 +74,7 @@ if __name__ == "__main__":
         blockSize=block_size,
         C=const,
     )
-    out1
-    out2
-    np.array_equal(out1, out2)
+    ada_out2 = ada_thresh_mean(
+        img, max_val=max_val, block_size=block_size, const=const,
+    )
+    print(np.array_equal(ada_out1, ada_out2)) # True
