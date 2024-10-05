@@ -89,4 +89,4 @@ if __name__ == "__main__":
     out2 = convolve_2d(
         x, kernel=kernel, stride=stride, padding=padding, dilation=dilation,
     )
-    print((out1 - out2).mean())
+    print(torch.abs(out1 - out2).mean())

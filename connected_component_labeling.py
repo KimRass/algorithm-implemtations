@@ -65,8 +65,7 @@ def perform_ccl(img, connectivity=4):
 if __name__ == "__main__":
     import cv2
 
-    # img_path = "./resources/j.webp"
-    img_path = "/Users/jongbeomkim/Desktop/workspace/numpy-image-processing/resources/j.webp"
+    img_path = "./resources/j.webp"
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
     connectivity = 4
     out11, out12 = cv2.connectedComponents(img, connectivity=connectivity)
