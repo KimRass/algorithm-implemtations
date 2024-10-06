@@ -60,7 +60,7 @@ if __name__ == "__main__":
     import cv2
     import imutils
 
-    img_path = "/Users/jongbeomkim/Desktop/workspace/numpy-image-processing/resources/fox_squirrel_original.jpg"
+    img_path = "./resources/fox_squirrel_original.jpg"
     img = cv2.imread(img_path, cv2.IMREAD_COLOR)
 
     angle = 44
