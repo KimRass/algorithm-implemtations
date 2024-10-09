@@ -40,7 +40,7 @@ def dilate_or_erode(img, kernel, num_iters=1, mode="dilate"):
             loc_region = padded_img[
                 row: row + kernel_h, col: col + kernel_w,
             ]
-            new_img[row, col] = func(loc_region * kernel)
+            new_img[row, col] = np.clip(func(loc_region * kernel), 0, 255)
     if num_iters == 1:
         return new_img
     return dilate_or_erode(

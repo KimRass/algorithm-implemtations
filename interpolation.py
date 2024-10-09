@@ -78,7 +78,7 @@ def interpolate(img, size, method):
                     val = row1_p*(row2 - row) + row2_p*(row - row1)
             new_img[
                 new_row, new_col, ...,
-            ] = val
+            ] = np.clip(val, 0, 255)
     return new_img.astype(np.uint8)
 
 

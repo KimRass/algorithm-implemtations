@@ -2,7 +2,6 @@
     # https://en.wikipedia.org/wiki/Connected-component_labeling
 
 import numpy as np
-from itertools import product
 import sys
 
 sys.setrecursionlimit(10 ** 9)
@@ -43,19 +42,25 @@ class ConnectedComponentLabeling(object):
                     neighbors.append((row + 1, col + 1)) # Bottom-right
         return neighbors
 
-    def dfs(self, cur_node):
-        if self.img[cur_node] != 0 and self.out[cur_node] == 0:
-            self.out[cur_node] = self.cur_label
-            for neighbor in self.get_neighbors(cur_node):
-                self.dfs(neighbor)
+    def dfs(self, start_node):
+        stack = [start_node]
+        while stack:
+            cur_node = stack.pop()
+            if self.img[cur_node] != 0 and self.out[cur_node] == 0:
+                self.out[cur_node] = self.cur_label
+                neighbors = self.get_neighbors(cur_node)
+                stack.extend(neighbors)
 
     def __call__(self):
-        for cur_node in product(range(self.h), range(self.w)):
-            if self.img[cur_node] != 0 and self.out[cur_node] == 0:
-                self.cur_label += 1
-            self.dfs(cur_node)
-        return self.cur_label + 1, self.out
+        for row in range(self.h):
+            for col in range(self.w):
+                cur_node = (row, col)
+                if self.img[cur_node] != 0 and self.out[cur_node] == 0:
+                    self.cur_label += 1
+                    assert self.cur_label < 2 ** 32
 
+                    self.dfs(cur_node)
+        return self.cur_label + 1, self.out
 
 def perform_ccl(img, connectivity=4):
     ccl = ConnectedComponentLabeling(img=img, connectivity=connectivity)
