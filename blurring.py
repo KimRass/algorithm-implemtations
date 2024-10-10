@@ -31,8 +31,8 @@ if __name__ == "__main__":
     img_path = "./resources/fox_squirrel_original.jpg"
     img = cv2.imread(img_path, cv2.IMREAD_COLOR)
 
-    kernel_size = 17
+    kernel_size = 5
     std = 3
     out1 = cv2.GaussianBlur(img, ksize=(kernel_size, kernel_size), sigmaX=std)
     out2 = gaussian_blur(img, kernel_size=kernel_size, std=std)
-    print(np.abs(out1 - out2).mean()) # 1.43
+    print(np.abs(out1 - out2).mean()) # 0.99

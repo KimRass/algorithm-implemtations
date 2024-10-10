@@ -2,12 +2,13 @@ import numpy as np
 import cv2
 from scipy.ndimage import gaussian_filter
 
-def gaussian_pyramid(image, num_octaves, num_intervals, sigma):
+
+def gaussian_pyramid(img, num_octs, num_intervals, sigma):
     """
     Build a Gaussian Pyramid with multiple octaves.
     
-    :param image: Input image (grayscale).
-    :param num_octaves: Number of octaves in the pyramid.
+    :param img: Input image (grayscale).
+    :param num_octs: Number of octaves in the pyramid.
     :param num_intervals: Number of intervals per octave.
     :param sigma: Initial sigma for Gaussian blurring.
     :return: List of Gaussian blurred images for each octave.
@@ -15,20 +16,20 @@ def gaussian_pyramid(image, num_octaves, num_intervals, sigma):
     pyramid = []
     k = 2 ** (1 / num_intervals)  # Factor for sigma increase between intervals
     
-    for octave in range(num_octaves):
-        octave_images = []
+    for oct in range(num_octs):
+        oct_imgs = []
         for interval in range(num_intervals + 3):  # +3 for extra images to subtract in DoG
-            if octave == 0 and interval == 0:
-                blurred_image = image
+            if oct == 0 and interval == 0:
+                blurred_img = img
             elif interval == 0:
                 # Downsample previous octave
-                blurred_image = cv2.resize(pyramid[-1][-3], (image.shape[1] // 2, image.shape[0] // 2))
+                blurred_img = cv2.resize(pyramid[-1][-3], (img.shape[1] // 2, img.shape[0] // 2))
             else:
                 sigma_i = sigma * (k ** interval)
-                blurred_image = gaussian_filter(octave_images[-1], sigma=sigma_i)
+                blurred_img = gaussian_filter(oct_imgs[-1], sigma=sigma_i)
 
-            octave_images.append(blurred_image)
-        pyramid.append(octave_images)
+            oct_imgs.append(blurred_img)
+        pyramid.append(oct_imgs)
     return pyramid
 
 
@@ -81,10 +82,10 @@ if __name__ == "__main__":
     # Parameters
     num_octaves = 4
     num_intervals = 3
-    initial_sigma = 1.6
+    init_std = 1.6
     
     # Step 1: Create Gaussian Pyramid
-    gaussian_pyr = gaussian_pyramid(image, num_octaves=num_octaves, num_intervals=num_intervals, sigma=initial_sigma)
+    gaussian_pyr = gaussian_pyramid(image, num_octaves=num_octaves, num_intervals=num_intervals, sigma=init_std)
     
     # Step 2: Compute Difference of Gaussians (DoG)
     dog_pyr = difference_of_gaussians(gaussian_pyr)
