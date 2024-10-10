@@ -6,21 +6,23 @@ from convolution_numpy import convolve
 def get_gaussian_kernel(kernel_size, std):
     assert kernel_size % 2 == 1
     vals = np.arange(
-        -kernel_size // 2 + 1, kernel_size // 2 + 1, dtype=np.float64,
+        -kernel_size//2 + 1, kernel_size//2 + 1, dtype=np.float64,
     )
     xs, ys = np.meshgrid(vals, vals)
-    kernel = np.exp(-(xs ** 2 + ys ** 2) / (2 * std ** 2))
+    kernel = np.exp(-(xs**2 + ys**2) / (2*std**2))
     kernel /= np.sum(kernel)
     return kernel
 
 
 def gaussian_blur(img, kernel_size, std):
     kernel = get_gaussian_kernel(kernel_size=kernel_size, std=std)
-    return convolve(
+    out = convolve(
         img,
         kernel=kernel,
-        padding=(kernel.shape[0] // 2, kernel.shape[1] // 2),
+        padding=(kernel.shape[0]//2, kernel.shape[1]//2),
+        padding_mode="reflect",
     )
+    return np.clip(out, 0, 255).astype(np.uint8)
 
 
 if __name__ == "__main__":
